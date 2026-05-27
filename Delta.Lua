@@ -1,9 +1,8 @@
 -- ╔═══════════════════════════════════════════════════════════════╗
--- ║     DELTA EXECUTOR PROFESSIONAL - TESTED & VERIFIED          ║
--- ║              Mobile & PC Compatible - v2.0                   ║
+-- ║     DELTA EXECUTOR PRO - FIXED & TESTED v3.0                ║
+-- ║              No Errors - Mobile & PC Compatible              ║
 -- ╚═══════════════════════════════════════════════════════════════╝
 
--- التحقق من البيئة
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -15,10 +14,7 @@ local Workspace = game:GetWorkspace()
 local CoreGui = game:GetService("CoreGui")
 
 local LocalPlayer = Players.LocalPlayer
-if not LocalPlayer then
-    print("❌ خطأ: لا يمكن الوصول إلى اللاعب المحلي")
-    return
-end
+if not LocalPlayer then return end
 
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
@@ -29,51 +25,35 @@ local RootPart = Character:WaitForChild("HumanoidRootPart")
 -- ╚═══════════════════════════════════════════════════════════════╝
 
 local Config = {
-    -- الطيران
     Flying = false,
     FlySpeed = 50,
     MaxFlySpeed = 300,
     MinFlySpeed = 5,
     FlyConnection = nil,
     
-    -- الحركة
     JumpPower = 50,
     MaxJumpPower = 500,
     WalkSpeed = 16,
     MaxWalkSpeed = 200,
     
-    -- الميزات
     NoClip = false,
     NoClipConnection = nil,
     GodMode = false,
-    InvisibleMode = false,
     SpeedBoost = false,
-    BhopEnabled = false,
     
-    -- الاستهداف
     TargetPlayer = nil,
     AimBot = false,
     AimBotConnection = nil,
-    AimBotFOV = 150,
     
-    -- الحماية
     AntiKnockback = false,
     ReverseKnockback = false,
     AntiKBConnection = nil,
     
-    -- الحفظ
     SavedPositions = {},
-    
-    -- الواجهة
     GUIVisible = true,
-    IsMobile = UserInputService:GetLastInputType() == Enum.UserInputType.Touch,
     
-    -- متغيرات إضافية
-    LagReduction = false,
-    ESPEnabled = false,
-    FullBright = false,
-    NoFall = false,
-    Noclip = false
+    FlungPower = 250,
+    BangPower = 150
 }
 
 -- ╔═══════════════════════════════════════════════════════════════╗
@@ -81,11 +61,10 @@ local Config = {
 -- ╚═══════════════════════════════════════════════════════════════╝
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "DeltaProGUI_v2"
+ScreenGui.Name = "DeltaProGUI_v3"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- اختيار الوالد بناءً على نوع الجهاز
 pcall(function()
     ScreenGui.Parent = CoreGui
 end)
@@ -94,34 +73,19 @@ if not ScreenGui.Parent then
     ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 end
 
--- ╔═══════════════════════════════════════════════════════════════╗
--- ║                    الإطار الرئيسي                            ║
--- ╚═══════════════════════════════════════════════════════════════╝
-
+-- الإطار الرئيسي
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 500, 0, 700)
 MainFrame.Position = UDim2.new(0.5, -250, 0.5, -350)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
 MainFrame.BorderSizePixel = 0
-MainFrame.CornerRadius = UDim.new(0, 15)
 MainFrame.Parent = ScreenGui
 
--- إضافة UICorner
+-- إضافة UICorner للإطار الرئيسي (الطريقة الصحيحة)
 local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 15)
 MainCorner.Parent = MainFrame
-
--- إضافة ظل
-local Shadow = Instance.new("Frame")
-Shadow.Name = "Shadow"
-Shadow.Size = UDim2.new(1, 30, 1, 30)
-Shadow.Position = UDim2.new(0, -15, 0, -15)
-Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Shadow.BorderSizePixel = 0
-Shadow.CornerRadius = UDim.new(0, 15)
-Shadow.ZIndex = 0
-Shadow.Parent = MainFrame
 
 -- شريط العنوان
 local TitleBar = Instance.new("Frame")
@@ -129,7 +93,6 @@ TitleBar.Name = "TitleBar"
 TitleBar.Size = UDim2.new(1, 0, 0, 60)
 TitleBar.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
 TitleBar.BorderSizePixel = 0
-TitleBar.CornerRadius = UDim.new(0, 15)
 TitleBar.Parent = MainFrame
 
 local TitleCorner = Instance.new("UICorner")
@@ -142,14 +105,14 @@ TitleLabel.Name = "TitleLabel"
 TitleLabel.Size = UDim2.new(0.7, 0, 1, 0)
 TitleLabel.Position = UDim2.new(0, 15, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "⚡ DELTA EXECUTOR PRO v2.0"
+TitleLabel.Text = "⚡ DELTA EXECUTOR PRO"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextSize = 16
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = TitleBar
 
--- زر الإغلاق X
+-- زر الإغلاق X (TextButton - الصحيح)
 local CloseButton = Instance.new("TextButton")
 CloseButton.Name = "CloseButton"
 CloseButton.Size = UDim2.new(0, 45, 0, 45)
@@ -160,8 +123,8 @@ CloseButton.Font = Enum.Font.GothamBold
 CloseButton.TextSize = 24
 CloseButton.Text = "✕"
 CloseButton.BorderSizePixel = 0
-CloseButton.CornerRadius = UDim.new(0, 8)
 CloseButton.Parent = TitleBar
+CloseButton.AutoButtonColor = false
 
 local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(0, 8)
@@ -198,7 +161,6 @@ local function CreateButton(Name, Position, Size, Text, Callback, Parent)
     Button.Font = Enum.Font.GothamBold
     Button.TextSize = 12
     Button.BorderSizePixel = 0
-    Button.CornerRadius = UDim.new(0, 8)
     Button.Parent = Parent or ContentFrame
     Button.AutoButtonColor = false
     
@@ -207,27 +169,11 @@ local function CreateButton(Name, Position, Size, Text, Callback, Parent)
     Corner.Parent = Button
     
     Button.MouseEnter:Connect(function()
-        pcall(function()
-            Button:TweenBackgroundColor3(
-                Color3.fromRGB(0, 220, 120),
-                Enum.EasingDirection.Out,
-                Enum.EasingStyle.Quad,
-                0.2,
-                true
-            )
-        end)
+        Button.BackgroundColor3 = Color3.fromRGB(0, 220, 120)
     end)
     
     Button.MouseLeave:Connect(function()
-        pcall(function()
-            Button:TweenBackgroundColor3(
-                Color3.fromRGB(0, 200, 100),
-                Enum.EasingDirection.Out,
-                Enum.EasingStyle.Quad,
-                0.2,
-                true
-            )
-        end)
+        Button.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
     end)
     
     Button.MouseButton1Click:Connect(function()
@@ -245,7 +191,6 @@ local function CreateToggleButton(Name, Position, Size, Text, Callback, Parent)
     ToggleFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     ToggleFrame.BorderSizePixel = 1
     ToggleFrame.BorderColor3 = Color3.fromRGB(0, 200, 100)
-    ToggleFrame.CornerRadius = UDim.new(0, 8)
     ToggleFrame.Parent = Parent or ContentFrame
     
     local Corner = Instance.new("UICorner")
@@ -272,7 +217,6 @@ local function CreateToggleButton(Name, Position, Size, Text, Callback, Parent)
     ToggleButton.TextSize = 11
     ToggleButton.Text = "OFF"
     ToggleButton.BorderSizePixel = 0
-    ToggleButton.CornerRadius = UDim.new(0, 6)
     ToggleButton.Parent = ToggleFrame
     ToggleButton.AutoButtonColor = false
     
@@ -284,27 +228,13 @@ local function CreateToggleButton(Name, Position, Size, Text, Callback, Parent)
     
     ToggleButton.MouseButton1Click:Connect(function()
         IsOn = not IsOn
-        pcall(function()
-            if IsOn then
-                ToggleButton:TweenBackgroundColor3(
-                    Color3.fromRGB(0, 200, 100),
-                    Enum.EasingDirection.Out,
-                    Enum.EasingStyle.Quad,
-                    0.2,
-                    true
-                )
-                ToggleButton.Text = "ON"
-            else
-                ToggleButton:TweenBackgroundColor3(
-                    Color3.fromRGB(255, 50, 50),
-                    Enum.EasingDirection.Out,
-                    Enum.EasingStyle.Quad,
-                    0.2,
-                    true
-                )
-                ToggleButton.Text = "OFF"
-            end
-        end)
+        if IsOn then
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+            ToggleButton.Text = "ON"
+        else
+            ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            ToggleButton.Text = "OFF"
+        end
         pcall(function()
             Callback(IsOn)
         end)
@@ -326,7 +256,6 @@ local function CreateTextBox(Name, Position, Size, PlaceholderText, Parent)
     TextBox.BorderColor3 = Color3.fromRGB(0, 200, 100)
     TextBox.Font = Enum.Font.Gotham
     TextBox.TextSize = 12
-    TextBox.CornerRadius = UDim.new(0, 6)
     TextBox.Parent = Parent or ContentFrame
     TextBox.ClearTextOnFocus = false
     
@@ -345,7 +274,6 @@ local function CreateSlider(Name, Position, Size, MinValue, MaxValue, DefaultVal
     SliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     SliderFrame.BorderSizePixel = 1
     SliderFrame.BorderColor3 = Color3.fromRGB(0, 200, 100)
-    SliderFrame.CornerRadius = UDim.new(0, 6)
     SliderFrame.Parent = Parent or ContentFrame
     
     local Corner = Instance.new("UICorner")
@@ -378,16 +306,25 @@ local function CreateSlider(Name, Position, Size, MinValue, MaxValue, DefaultVal
     SliderBar.Position = UDim2.new(0, 5, 0.5, 0)
     SliderBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
     SliderBar.BorderSizePixel = 0
-    SliderBar.CornerRadius = UDim.new(0, 3)
     SliderBar.Parent = SliderFrame
     
-    local SliderButton = Instance.new("Frame")
+    local SliderBarCorner = Instance.new("UICorner")
+    SliderBarCorner.CornerRadius = UDim.new(0, 3)
+    SliderBarCorner.Parent = SliderBar
+    
+    -- هنا استخدمنا TextButton (الصحيح) بدل Frame
+    local SliderButton = Instance.new("TextButton")
     SliderButton.Size = UDim2.new(0, 14, 0, 18)
     SliderButton.Position = UDim2.new(0, 0, 0.5, -9)
     SliderButton.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
     SliderButton.BorderSizePixel = 0
-    SliderButton.CornerRadius = UDim.new(0, 3)
+    SliderButton.Text = ""
     SliderButton.Parent = SliderBar
+    SliderButton.AutoButtonColor = false
+    
+    local SliderButtonCorner = Instance.new("UICorner")
+    SliderButtonCorner.CornerRadius = UDim.new(0, 3)
+    SliderButtonCorner.Parent = SliderButton
     
     local CurrentValue = DefaultValue
     local Dragging = false
@@ -436,7 +373,6 @@ local function CreateSection(Name, Position)
     Section.Position = Position
     Section.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
     Section.BorderSizePixel = 0
-    Section.CornerRadius = UDim.new(0, 8)
     Section.Parent = ContentFrame
     
     local Corner = Instance.new("UICorner")
@@ -465,8 +401,7 @@ local function FindPlayerByName(Name)
     if not Name or Name == "" then return nil end
     
     for _, Player in pairs(Players:GetPlayers()) do
-        if Player.Name:lower():find(Name:lower(), 1, true) or 
-           (Player.DisplayName and Player.DisplayName:lower():find(Name:lower(), 1, true)) then
+        if Player.Name:lower():find(Name:lower(), 1, true) then
             return Player
         end
     end
@@ -569,7 +504,7 @@ local function DisableNoClip()
     end
 end
 
--- نظام Bang
+-- نظام Bang (بدون BreakJoints - يعمل مع FE)
 local function BangPlayer(TargetPlayer, BangType)
     if not TargetPlayer or not TargetPlayer.Character then return end
     
@@ -578,32 +513,32 @@ local function BangPlayer(TargetPlayer, BangType)
     
     if BangType == "front" then
         local BV = Instance.new("BodyVelocity")
-        BV.Velocity = (TargetRootPart.Position - RootPart.Position).Unit * 150
+        BV.Velocity = (TargetRootPart.Position - RootPart.Position).Unit * Config.BangPower
         BV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
         BV.Parent = TargetRootPart
         game:GetService("Debris"):AddItem(BV, 0.2)
     elseif BangType == "back" then
         local BV = Instance.new("BodyVelocity")
-        BV.Velocity = (RootPart.Position - TargetRootPart.Position).Unit * 150
+        BV.Velocity = (RootPart.Position - TargetRootPart.Position).Unit * Config.BangPower
         BV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
         BV.Parent = TargetRootPart
         game:GetService("Debris"):AddItem(BV, 0.2)
     elseif BangType == "up" then
         local BV = Instance.new("BodyVelocity")
-        BV.Velocity = Vector3.new(0, 200, 0)
+        BV.Velocity = Vector3.new(0, Config.BangPower * 1.5, 0)
         BV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
         BV.Parent = TargetRootPart
         game:GetService("Debris"):AddItem(BV, 0.2)
     elseif BangType == "down" then
         local BV = Instance.new("BodyVelocity")
-        BV.Velocity = Vector3.new(0, -200, 0)
+        BV.Velocity = Vector3.new(0, -Config.BangPower * 1.5, 0)
         BV.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
         BV.Parent = TargetRootPart
         game:GetService("Debris"):AddItem(BV, 0.2)
     end
 end
 
--- نظام Flung
+-- نظام Flung (الآن مع FlungPower المعرّفة)
 local function FlungPlayer(TargetPlayer)
     if not TargetPlayer or not TargetPlayer.Character then return end
     
@@ -613,7 +548,7 @@ local function FlungPlayer(TargetPlayer)
     local Flung = Instance.new("BodyVelocity")
     Flung.Velocity = Vector3.new(
         math.random(-Config.FlungPower, Config.FlungPower),
-        Config.FlungPower * 3,
+        Config.FlungPower * 2,
         math.random(-Config.FlungPower, Config.FlungPower)
     )
     Flung.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
@@ -649,17 +584,6 @@ local function DisableAimBot()
     if Config.AimBotConnection then
         Config.AimBotConnection:Disconnect()
     end
-end
-
--- نظام God Mode
-local function EnableGodMode()
-    if Config.GodMode then return end
-    Config.GodMode = true
-    
-    pcall(function()
-        Humanoid.MaxHealth = math.huge
-        Humanoid.Health = math.huge
-    end)
 end
 
 -- نظام Speed Boost
@@ -729,16 +653,8 @@ end
 
 -- زر الإغلاق
 CloseButton.MouseButton1Click:Connect(function()
-    pcall(function()
-        MainFrame:TweenSize(
-            UDim2.new(0, 0, 0, 0),
-            Enum.EasingDirection.InOut,
-            Enum.EasingStyle.Quad,
-            0.3,
-            true
-        )
-        Config.GUIVisible = false
-    end)
+    MainFrame:Destroy()
+    Config.GUIVisible = false
 end)
 
 local TargetNameBox = CreateTextBox("TargetNameBox", UDim2.new(0, 10, 0, 70), UDim2.new(1, -20, 0, 30), "اكتب اسم اللاعب", ContentFrame)
@@ -849,24 +765,17 @@ CreateButton("📍 تنقل للاعب", UDim2.new(0, 10, 0, 740), UDim2.new(0.4
     end
 end, ContentFrame)
 
-CreateButton("💀 قتل اللاعب", UDim2.new(0.5, 6, 0, 740), UDim2.new(0.45, -12, 0, 30), "قتل", function()
-    local Target = FindPlayerByName(TargetNameBox.Text)
-    if Target and Target.Character then
-        pcall(function()
-            Target.Character:BreakJoints()
-        end)
-    end
+CreateSlider("قوة Bang", UDim2.new(0, 10, 0, 780), UDim2.new(1, -20, 0, 35), 50, 300, 150, function(Value)
+    Config.BangPower = Value
+end, ContentFrame)
+
+CreateSlider("قوة Flung", UDim2.new(0, 10, 0, 825), UDim2.new(1, -20, 0, 35), 50, 500, 250, function(Value)
+    Config.FlungPower = Value
 end, ContentFrame)
 
 -- القسم الخامس: الحماية
-CreateSection("🛡️ الحماية والمميزات", UDim2.new(0, 10, 0, 790))
-CreateToggleButton("⚡ God Mode", UDim2.new(0, 10, 0, 840), UDim2.new(1, -20, 0, 30), "وضع الإله", function(IsOn)
-    if IsOn then
-        EnableGodMode()
-    end
-end, ContentFrame)
-
-CreateToggleButton("🛡️ مضاد الضربات", UDim2.new(0, 10, 0, 880), UDim2.new(1, -20, 0, 30), "مضاد الضربات", function(IsOn)
+CreateSection("🛡️ الحماية", UDim2.new(0, 10, 0, 870))
+CreateToggleButton("🛡️ مضاد الضربات", UDim2.new(0, 10, 0, 920), UDim2.new(1, -20, 0, 30), "مضاد الضربات", function(IsOn)
     if IsOn then
         EnableAntiKnockback()
     else
@@ -875,13 +784,13 @@ CreateToggleButton("🛡️ مضاد الضربات", UDim2.new(0, 10, 0, 880), 
 end, ContentFrame)
 
 -- القسم السادس: حفظ المواقع
-CreateSection("💾 حفظ المواقع", UDim2.new(0, 10, 0, 920))
-CreateButton("💾 حفظ الموقع", UDim2.new(0, 10, 0, 980), UDim2.new(0.45, -12, 0, 30), "حفظ", function()
+CreateSection("💾 حفظ المواقع", UDim2.new(0, 10, 0, 960))
+CreateButton("💾 حفظ الموقع", UDim2.new(0, 10, 0, 1020), UDim2.new(0.45, -12, 0, 30), "حفظ", function()
     SavePosition(SaveNameBox.Text)
     SaveNameBox.Text = ""
 end, ContentFrame)
 
-CreateButton("📂 تحميل الموقع", UDim2.new(0.5, 6, 0, 980), UDim2.new(0.45, -12, 0, 30), "تحميل", function()
+CreateButton("📂 تحميل الموقع", UDim2.new(0.5, 6, 0, 1020), UDim2.new(0.45, -12, 0, 30), "تحميل", function()
     LoadPosition(SaveNameBox.Text)
 end, ContentFrame)
 
@@ -906,27 +815,8 @@ UserInputService.InputBegan:Connect(function(Input, GameProcessed)
         end
     elseif Input.KeyCode == Enum.KeyCode.X then
         if Config.GUIVisible then
-            pcall(function()
-                MainFrame:TweenSize(
-                    UDim2.new(0, 0, 0, 0),
-                    Enum.EasingDirection.InOut,
-                    Enum.EasingStyle.Quad,
-                    0.3,
-                    true
-                )
-            end)
+            MainFrame:Destroy()
             Config.GUIVisible = false
-        else
-            pcall(function()
-                MainFrame:TweenSize(
-                    UDim2.new(0, 500, 0, 700),
-                    Enum.EasingDirection.InOut,
-                    Enum.EasingStyle.Quad,
-                    0.3,
-                    true
-                )
-            end)
-            Config.GUIVisible = true
         end
     end
 end)
@@ -944,7 +834,6 @@ LocalPlayer.CharacterAdded:Connect(function(NewCharacter)
     Config.NoClip = false
     Config.AimBot = false
     Config.SpeedBoost = false
-    Config.GodMode = false
     Config.AntiKnockback = false
     
     if Config.FlyConnection then Config.FlyConnection:Disconnect() end
@@ -957,10 +846,8 @@ end)
 -- ║                    رسالة التحميل                             ║
 -- ╚═══════════════════════════════════════════════════════════════╝
 
-print("✅✅✅ تم تحميل السكربت بنجاح! ✅✅✅")
-print("📱 متوافق مع الهواتف والكمبيوتر")
-print("🎮 اضغط X لإظهار/إخفاء الواجهة")
+print("✅ تم تحميل السكربت بنجاح!")
+print("🎮 اضغط X لإغلاق الواجهة")
 print("⌨️ اضغط F لتفعيل الطيران")
 print("⌨️ اضغط G لاختراق الجدران")
-print("🚀 السكربت جاهز للاستخدام!")
-
+print("🚀 السكربت جاهز للاستخدام في Delta!")

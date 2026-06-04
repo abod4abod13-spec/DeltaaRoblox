@@ -29,7 +29,7 @@ Instance.new("UIStroke", MainFrame).Color = Color3.fromRGB(0, 200, 255)
 local OpenBtn = Instance.new("TextButton", ScreenGui)
 OpenBtn.Size = UDim2.new(0, 55, 0, 55)
 OpenBtn.Position = UDim2.new(0.02, 0, 0.4, 0)
-OpenBtn.Text = "By ⚡ SAD_J82"
+OpenBtn.Text = "BY⚡SAD_J82"
 OpenBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 OpenBtn.TextColor3 = Color3.new(1, 1, 1)
 Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(1, 0)
@@ -246,5 +246,4 @@ Close.Text = "X"
 Close.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 Instance.new("UICorner", Close).CornerRadius = UDim.new(1, 0)
 Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
-
 

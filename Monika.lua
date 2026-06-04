@@ -29,7 +29,7 @@ Instance.new("UIStroke", MainFrame).Color = Color3.fromRGB(0, 200, 255)
 local OpenBtn = Instance.new("TextButton", ScreenGui)
 OpenBtn.Size = UDim2.new(0, 55, 0, 55)
 OpenBtn.Position = UDim2.new(0.02, 0, 0.4, 0)
-OpenBtn.Text = "By ⚡ SAD_J82 قيد التطوير... " 
+OpenBtn.Text = "By ⚡ SAD_J82"
 OpenBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 OpenBtn.TextColor3 = Color3.new(1, 1, 1)
 Instance.new("UICorner", OpenBtn).CornerRadius = UDim.new(1, 0)
@@ -246,22 +246,5 @@ Close.Text = "X"
 Close.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 Instance.new("UICorner", Close).CornerRadius = UDim.new(1, 0)
 Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
-JumpBox.PlaceholderText = "قوة النط (رقم)"
-JumpBox.FocusLost:Connect(function() player.Character.Humanoid.JumpPower = tonumber(JumpBox.Text) or 50 end)
 
-local TPBox = Instance.new("TextBox", Scroll)
-TPBox.Size = UDim2.new(1, 0, 0, 40)
-TPBox.PlaceholderText = "انتقال للاعب (اسم)..."
-TPBox.FocusLost:Connect(function() 
-    local target = Players:FindFirstChild(TPBox.Text)
-    if target then player.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame else notify("اللاعب غير موجود") end
-end)
-
--- [ زر إغلاق السكربت ]
-local Kill = Instance.new("TextButton", MainFrame)
-Kill.Size = UDim2.new(0.2, 0, 0, 30)
-Kill.Position = UDim2.new(0.75, 0, 0.02, 0)
-Kill.Text = "X"
-Kill.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-Kill.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
